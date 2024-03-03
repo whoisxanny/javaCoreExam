@@ -35,9 +35,8 @@ public class JavaQuestionServiceImpl implements QuestionService {
         if (!questions.contains(question)) {
             questions.add(question);
             return question;
-        } else {
-            throw new QuestionDoesntExcistException("Nope");
         }
+        throw new RuntimeException();
     }
 
     @Override
@@ -46,9 +45,8 @@ public class JavaQuestionServiceImpl implements QuestionService {
         if (!questions.contains(question1)) {
             questions.add(question1);
             return question1;
-        } else {
-            throw new InvalidAmountOfQuestions("BB");
         }
+        throw new RuntimeException();
     }
 
     @Override
@@ -56,18 +54,16 @@ public class JavaQuestionServiceImpl implements QuestionService {
         if (questions.contains(question)) {
             questions.remove(question);
             return question;
-        } else {
-            throw new QuestionDoesntExcistException("No question");
         }
+        throw new QuestionDoesntExcistException("No question");
     }
 
     @Override
     public Collection<Question> getAll() {
         if (!questions.isEmpty()) {
             return questions;
-        } else {
-            throw new RuntimeException();
         }
+        throw new QuestionDoesntExcistException("BB");
     }
 
     @Override
@@ -75,8 +71,7 @@ public class JavaQuestionServiceImpl implements QuestionService {
         if (!questions.isEmpty()) {
             random.nextInt(questions.size());
             return questions.stream().toList().get(questions.size());
-        } else {
-            throw new RuntimeException();
         }
+        throw new RuntimeException();
     }
 }

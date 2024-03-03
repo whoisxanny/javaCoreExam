@@ -2,58 +2,50 @@ package pro.sky.java.course2.examineservice.impl;
 
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import pro.sky.java.course2.examineservice.domain.Question;
 import pro.sky.java.course2.examineservice.exceptions.QuestionDoesntExcistException;
 import pro.sky.java.course2.examineservice.service.QuestionService;
+import pro.sky.java.course2.examineservice.service.impl.JavaQuestionServiceImpl;
 
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
+import static pro.sky.java.course2.examineservice.Constants.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static pro.sky.java.course2.examineservice.Constants.QUESTION_1;
-import static pro.sky.java.course2.examineservice.Constants.QUESTION_2;
-
-@ExtendWith(MockitoExtension.class)
 public class JavaQuestionServiceImplTest {
-
-    @Mock
-    private QuestionService questionService;
-
-    @InjectMocks
-    private JavaQuestionServiceImplTest javaQuestionServiceImplTest;
+    private final QuestionService e = new JavaQuestionServiceImpl();
 
     @Test
-    public void addQuestionTest() {
-        Mockito.when(questionService.add(QUESTION_1)).thenReturn(QUESTION_1).thenThrow(new RuntimeException());
-        assertEquals(questionService.add(QUESTION_1), QUESTION_1);
-
+    public void testAdd() {
+        Question result = e.add(QUESTION_1.getQuestion(), QUESTION_1.getAnswer());
+        assertEquals(result, QUESTION_1);
     }
 
     @Test
-    public void removeQustionTest() {
-        Mockito.when(questionService.remove(QUESTION_1)).thenReturn(QUESTION_1).thenThrow(new RuntimeException());
-        assertEquals(questionService.remove(QUESTION_1), QUESTION_1);
+    public void testAddShouldThrowException() {
+        assertThrows(RuntimeException.class, () -> e.add(QUESTION_WE_HAVE.getQuestion(), QUESTION_WE_HAVE.getAnswer()));
     }
 
     @Test
-    public void getAllQuestionsTest() {
-        questionService.add(QUESTION_1);
-        questionService.add(QUESTION_2);
-        Mockito.when(questionService.getAll()).thenReturn(List.of(QUESTION_1, QUESTION_2)).thenThrow(new QuestionDoesntExcistException());
-        assertEquals(questionService.getAll(), List.of(QUESTION_1, QUESTION_2));
+    public void testAddWithoutParams() {
+        Question result = e.add(QUESTION_1);
+        assertEquals(result, QUESTION_1);
     }
 
     @Test
-    public void getRandomQuestion() {
-        questionService.add(QUESTION_1);
-        questionService.add(QUESTION_2);
-        Mockito.when(questionService.getRandomQuestion()).thenReturn(QUESTION_1).thenThrow(new RuntimeException());
-        assertEquals(questionService.getRandomQuestion(), QUESTION_1);
+    public void testRemove() {
+        Question result = e.remove(QUESTION_WE_HAVE);
+        assertEquals(QUESTION_WE_HAVE, result);
     }
 
+    @Test
+    void testRemoveShouldThrowQuestionDoesntExcistException() {
+        assertThrows(QuestionDoesntExcistException.class,
+                () -> e.remove(QUESTION_1));
+    }
 
+    @Test
+    void testGetAll() {
+        assertEquals(QUESTIONS, e.getAll());
+    }
 }
+
+
